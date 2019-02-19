@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+  <!-- Test !!!-->
+  <!-- Hello3 -->
+<head>
+  <title>iCatLitterService.</title>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js" type="text/javascript"></script>
+  <!--test head-->
+  <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-firestore.js"></script>
+  <script src="api.js"></script>
+
+
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="index.html">iCatLitterService</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="project.html">Controller</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="contact.html">Contract Us</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- เริ่มส่วนของ เนื้อหา-->
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card" style="margin:50px 0">
+          <!-- Default panel contents -->
+          <div class="card-header">Command switch</div>
+          <li class="list-group-item">
+            Power On
+            <label class="switch">
+              <input type="checkbox" id="powerCheck" class="success" onclick="powerFunction()">
+              <span class="slider"></span>
+            </label>
+          </li>
+          <li class="list-group-item">
+            Sleep Mode
+            <label class="switch ">
+              <input type="checkbox" id="sleepCheck" class="info" onclick="sleepFunction()">
+              <span class="slider"></span>
+            </label>
+          </li>
+          <li class="list-group-item">
+            Automatic Cleansing Mode
+            <label class="switch ">
+              <input type="checkbox" id="cleanCheck" class="warning" onclick="cleanFunction()">
+              <span class="slider"></span>
+            </label>
+          </li>
+          <li class="list-group-item">
+            Notifications Mode
+            <label class="switch ">
+              <input type="checkbox" id="noticeCheck" class="danger"  onclick="noticeFunction()">
+              <span class="slider"></span>
+            </label>
+          </li>
+          <li class="list-group-item">
+            Clean the box
+            <label class="switch">
+              <button type="button" class="btn btn-secondary" onclick="cleanner_on()">Clean</button>
+            </label>
+          </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card" style="margin:50px 0">
+          <div class="card-header">Status bar</div>
+          <li class="list-group-item">
+            Catliiter Box
+            <label class="statusbarred">
+              <p id="statusCheck">Offline</p>
+            </label>
+          </li>
+          <li class="list-group-item">
+            Trash
+            <label class="statusbarred">
+              full
+            </label>
+          </li>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+    integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+    integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+    crossorigin="anonymous"></script>
+
+</body>
+
+<!--test firestore-->
+
+<!--Arduino-->
+<script type="text/javascript">
+  client = new Paho.MQTT.Client("m15.cloudmqtt.com", 34203, "myweb");
+  //Example client = new Paho.MQTT.Client("m11.cloudmqtt.com", 32903, "web_" + parseInt(Math.random() * 100, 10));
+
+  // set callback handlers
+  client.onConnectionLost = onConnectionLost;
+  client.onMessageArrived = onMessageArrived;
+  var options = {
+    useSSL: true,
+    userName: "rrfbpaqw",
+    password: "jzW3F6vT2E4k",
+    onSuccess: onConnect,
+    onFailure: doFail
+  }
+
+  // connect the client
+  client.connect(options);
+
+  // called when the client connects
+  function onConnect() {
+    // Once a connection has been made, make a subscription and send a message.
+    console.log("onConnect");
+    client.subscribe("/server");
+    client.subscribe("/icatbox");
+    client.subscribe("/statusmsg");
+
+
+
+    message = new Paho.MQTT.Message("off");
+    message.destinationName = "/server";
+    client.send(message);
+    swal("Connected !", "1 device connected");
+  }
+  function doFail(e) {
+    console.log(e);
+    alert("Error");
+  }
+  // called when the client loses its connection
+  function onConnectionLost(responseObject) {
+    if (responseObject.errorCode !== 0) {
+      console.log("onConnectionLost:" + responseObject.errorMessage);
+    }
+  }
+  // called when a message arrives
+  function onMessageArrived(message) {
+    console.log("onMessageArrived:" + message.destinationName + ' ' + message.payloadString);
+
+    // Online offline command
+    if (message.destinationName == "/statusmsg") {
+      var status = message.payloadString;
+      console.log(status);
+      if (status == 'Online') {
+        document.getElementById("statusCheck").innerHTML = "Online";
+        document.getElementById("statusCheck").style.color = "#8bc34a";
+
+      } else if (status !== 'Online') {
+        document.getElementById("statusCheck").innerHTML = "Offline";
+        document.getElementById("statusCheck").style.color = "#f44336";
+      }
+
+       /* var state = $("#statusCheck").html();
+      db.collection("posts").add({
+          date: "test",
+          time:"test",
+          statusCheck: state
+        })
+          .then(function (docRef) {
+            console.log("Document written with ID: ", docRef.id);
+          })
+          .catch(function (error) {
+            console.error("Error adding document: ", error);
+          });
+      ฟังก์ชั่นโพสไปยังไฟล์สโต
+        
+            */
+    }
+  }
+
+  function send(msg) {
+    message = new Paho.MQTT.Message(msg);
+    message.destinationName = "/server";
+    client.send(message);
+  }
+  function power_on() {
+    send("power on");
+  }
+  function power_off() {
+    send("power off");
+  }
+  function sleep_on() {
+    send("sleep on")
+  }
+  function sleep_off() {
+    send("sleep off")
+  }
+  function clean_on() {
+    send("clean on")
+  }
+  function clean_off() {
+    send("clean off")
+  }
+  function notice_on() {
+    send("notice on")
+  }
+  function notice_off() {
+    send("notice off")
+  }
+  function cleanner_on() {
+    send("clean");
+
+  }
+
+</script>
+<!-- function check switch -->
+<script>
+  function powerFunction() {
+    var checkBox = document.getElementById("powerCheck");
+    if (checkBox.checked == true) {
+      power_on();
+    } else {
+      power_off();
+    }
+  }
+</script>
+<script>
+  function sleepFunction() {
+    var checkBox = document.getElementById("sleepCheck");
+    if (checkBox.checked == true) {
+      sleep_on();
+    } else {
+      sleep_off();
+    }
+  }
+</script>
+<script>
+  function cleanFunction() {
+    var checkBox = document.getElementById("cleanCheck");
+    if (checkBox.checked == true) {
+      clean_on();
+    } else {
+      clean_off();
+    }
+  }
+</script>
+<script>
+  function noticeFunction() {
+    var checkBox = document.getElementById("noticeCheck");
+    if (checkBox.checked == true) {
+      notice_on();
+    } else {
+      notice_off();
+    }
+  }
+</script>
+
+</html>
