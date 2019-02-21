@@ -1,6 +1,5 @@
 
-
-  // Initialize Firebase
+ // Initialize Firebase
   var config = {
     apiKey: "AIzaSyC9Ij3Dr2KkojeQQMBBZkYFwMbhwBp8klg",
     authDomain: "icatlitterbox.firebaseapp.com",
@@ -10,4 +9,6 @@
     messagingSenderId: "463560272551"
   };
   firebase.initializeApp(config);
-  var db = firebase.firestore();
+  const db = firebase.firestore();
+  db.settings({ timestampsInSnapshots: true });
+  <script src="json.js"></script>

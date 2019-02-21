@@ -51,6 +51,9 @@
         <li class="nav-item">
           <a class="nav-link" href="contact.html">Contract Us</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="aclog.html">Action Log</a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -183,6 +186,23 @@
   function onMessageArrived(message) {
     console.log("onMessageArrived:" + message.destinationName + ' ' + message.payloadString);
 
+    var d = new Date();
+    // document.getElementById("dateShow").innerHTML = d;
+    var times = String(d);
+
+    var dateshow = $("#dateShow").html();
+
+    db.collection("datastorage").add({
+      time: times
+
+
+    }).then(function (docRef) {
+      console.log("Document written with ID: ", docRef.id);
+    }).catch(function (error) {
+      console.error("Error adding document: ", error);
+    });
+    console.log('11111111');
+
     // Online offline command
     if (message.destinationName == "/statusmsg") {
       var status = message.payloadString;
@@ -197,30 +217,6 @@
       }
 
 
-      var d = new Date();
-      // document.getElementById("dateShow").innerHTML = d;
-
-      var dateshow = $("#dateShow").html();
-
-      db.collection("datastorage").add({
-        time: d
-
-      }).then(function (docRef) {
-          console.log("Document written with ID: ", docRef.id);
-        }).catch(function (error) {
-          console.error("Error adding document: ", error);
-        });
-        
-        db.collection("datastorage1").add({
-        Name: "Dome"
-
-      })
-        .then(function (docRef) {
-          console.log("Document written with ID: ", docRef.id);
-        })
-        .catch(function (error) {
-          console.error("Error adding document: ", error);
-        });
 
     }
   }
