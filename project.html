@@ -81,16 +81,13 @@
             </label>
           </li>
           <li class="list-group-item">
-            Trash
-            <div id="bar-1" class="bar-main-container gray">
-              <div class="wrap">
-                <div class="bar-percentage" data-percentage="38"></div>
-                <div class="bar-container">
-                  <div class="bar"></div>
-                </div>
-              </div>
+            Trash status (if more than 60% is not so good)
+            <div class="progress">
+              <div id="trashStatus" class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width:0%;"
+                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </li>
+
         </div>
       </div>
     </div>
@@ -138,6 +135,7 @@
     client.subscribe("/server");
     client.subscribe("/icatbox");
     client.subscribe("/statusmsg");
+    client.subscribe("/trashstatus")
 
 
 
@@ -159,27 +157,10 @@
   // called when a message arrives
   function onMessageArrived(message) {
     console.log("onMessageArrived:" + message.destinationName + ' ' + message.payloadString);
-
-    var d = new Date();
-    // document.getElementById("dateShow").innerHTML = d;
-    var times = String(d);
-
-    var dateshow = $("#dateShow").html();
-
-    db.collection("datastorage").add({
-      time: times
-
-
-    }).then(function (docRef) {
-      console.log("Document written with ID: ", docRef.id);
-    }).catch(function (error) {
-      console.error("Error adding document: ", error);
-    });
-    console.log('11111111');
-
     // Online offline command
     if (message.destinationName == "/statusmsg") {
       var status = message.payloadString;
+      console.log("111111");
       console.log(status);
       if (status == 'Online') {
         document.getElementById("statusCheck").innerHTML = "Online";
@@ -189,10 +170,16 @@
         document.getElementById("statusCheck").innerHTML = "Offline";
         document.getElementById("statusCheck").style.color = "#f44336";
       }
-
-
-
+     
     }
+    else if(message.destinationName == "/trashstatus") {
+        var trashstatus = message.payloadString;
+        console.log(trashstatus);
+        $("#trashStatus").css("width", trashstatus+"%");
+        if (trashstatus > 60){
+          notice_Line()
+        }
+      }
   }
 
   function send(msg) {
@@ -218,8 +205,8 @@
   function clean_off() {
     send("clean off")
   }
-  function notice_on() {
-    send("notice on")
+  function notice_Line() {
+    send("alert line")
   }
   function notice_off() {
     send("notice off")
