@@ -84,7 +84,9 @@
             Trash status (if more than 60% is not so good)
             <div class="progress">
               <div id="trashStatus" class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width:0%;"
-                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+              <div id="valueBar"></div>
+              </div>
             </div>
           </li>
 
@@ -176,6 +178,7 @@
         var trashstatus = message.payloadString;
         console.log(trashstatus);
         $("#trashStatus").css("width", trashstatus+"%");
+        document.getElementById("valueBar").innerHTML = trashstatus+"%";
         if (trashstatus > 60){
           notice_Line()
         }
