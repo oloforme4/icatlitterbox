@@ -61,14 +61,17 @@
       <div class="col-md-6">
         <div class="card" style="margin:50px 0">
           <!-- Default panel contents -->
-          <div class="card-header">Command switch</div>
+          <div class="card-header">iCatLitterBox</div>
           <li class="list-group-item">
             Clean the box
             <label class="switch">
               <button type="button" class="btn btn-secondary" onclick="cleanner_on()">Clean</button>
             </label>
           </li>
-          </ul>
+          <li class="list-group-item">
+            The cat is not using the iCatLitterBox now.
+            <img src="picturesource/free cat box.jpg" alt="">
+          </li>
         </div>
       </div>
       <div class="col-md-6">
@@ -83,13 +86,17 @@
           <li class="list-group-item">
             Trash status (if more than 60% is not so good)
             <div class="progress">
-              <div id="trashStatus" class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width:0%;"
-                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-              <div id="valueBar"></div>
+              <div id="trashStatus" class="progress-bar progress-bar-striped bg-danger" role="progressbar"
+                style="width:0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                <div id="valueBar"></div>
               </div>
             </div>
+          <li class="list-group-item">
+            <label>
+              <button type="button" class="btn btn-success" onclick="checktrash_on()">Check Trash</button>
+            </label>
           </li>
-
+          </li>
         </div>
       </div>
     </div>
@@ -162,7 +169,6 @@
     // Online offline command
     if (message.destinationName == "/statusmsg") {
       var status = message.payloadString;
-      console.log("111111");
       console.log(status);
       if (status == 'Online') {
         document.getElementById("statusCheck").innerHTML = "Online";
@@ -172,53 +178,37 @@
         document.getElementById("statusCheck").innerHTML = "Offline";
         document.getElementById("statusCheck").style.color = "#f44336";
       }
-     
+
     }
-    else if(message.destinationName == "/trashstatus") {
-        var trashstatus = message.payloadString;
-        console.log(trashstatus);
-        $("#trashStatus").css("width", trashstatus+"%");
-        document.getElementById("valueBar").innerHTML = trashstatus+"%";
-        if (trashstatus > 60){
-          notice_Line()
-        }
+    else if (message.destinationName == "/trashstatus") {
+      var trashstatus = message.payloadString;
+      console.log(trashstatus);
+      $("#trashStatus").css("width", trashstatus + "%");
+      document.getElementById("valueBar").innerHTML = trashstatus + "%";
+      if (trashstatus > 60) {
+        notice_Line()
       }
+    }
   }
+
+
+
+
 
   function send(msg) {
     message = new Paho.MQTT.Message(msg);
     message.destinationName = "/server";
     client.send(message);
   }
-  function power_on() {
-    send("power on");
-  }
-  function power_off() {
-    send("power off");
-  }
-  function sleep_on() {
-    send("sleep on")
-  }
-  function sleep_off() {
-    send("sleep off")
-  }
-  function clean_on() {
-    send("clean on")
-  }
-  function clean_off() {
-    send("clean off")
+  function checktrash_on() {
+    send("check trash");
   }
   function notice_Line() {
     send("alert line")
   }
-  function notice_off() {
-    send("notice off")
-  }
   function cleanner_on() {
     send("clean");
-
   }
-
 </script>
 <!-- function check switch -->
 <script>
