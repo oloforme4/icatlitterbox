@@ -125,7 +125,6 @@
     float: right;
     color: #f44336
   }
-
 .buttonnew {
   position: absolute;
   cursor: pointer;
@@ -134,4 +133,7 @@
   right: 0;
   bottom: 0;
   transition: .4s;
+}
+.catcheckfont {
+  color: #8bc34a
 }

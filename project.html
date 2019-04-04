@@ -69,8 +69,8 @@
             </label>
           </li>
           <li class="list-group-item">
-            The cat is not using the iCatLitterBox now.
-            <img src="picturesource/free cat box.jpg" alt="">
+            <label class="catcheckfont" id="checkfont">The cat is not using the iCatLitterBox now.</label>
+            <img id="catCheck" src ="picturesource/free cat box.jpg" alt="">
           </li>
         </div>
       </div>
@@ -144,7 +144,8 @@
     client.subscribe("/server");
     client.subscribe("/icatbox");
     client.subscribe("/statusmsg");
-    client.subscribe("/trashstatus")
+    client.subscribe("/trashstatus");
+    client.subscribe("/checkcat");
 
 
 
@@ -189,12 +190,17 @@
         notice_Line()
       }
     }
+    else if (message.destinationName == "/checkcat") {
+      var checkcat = message.payloadString;
+      if (checkcat == 'cat in the box') {
+        var el = document.getElementById("catCheck");
+        console.log("catcheck is okay")
+        $("#catCheck").attr("src","picturesource/cat using.JPG");
+        document.getElementById("checkfont").innerHTML = "The cat is using the iCatLitterBox now.";
+        document.getElementById("checkfont").style.color = "#f44336";
+      }
+    }
   }
-
-
-
-
-
   function send(msg) {
     message = new Paho.MQTT.Message(msg);
     message.destinationName = "/server";
