@@ -27,7 +27,7 @@
   <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-firestore.js"></script>
   <script src="api.js"></script>
-
+  <script src="json.js"></script>
 
 
 </head>
@@ -70,7 +70,7 @@
           </li>
           <li class="list-group-item">
             <label class="catcheckfont" id="checkfont">The cat is not using the iCatLitterBox now.</label>
-            <img id="catCheck" src ="picturesource/free cat box.jpg" alt="">
+            <img id="catCheck" src="picturesource/free cat box.jpg" alt="">
           </li>
         </div>
       </div>
@@ -133,10 +133,8 @@
     onSuccess: onConnect,
     onFailure: doFail
   }
-
   // connect the client
   client.connect(options);
-
   // called when the client connects
   function onConnect() {
     // Once a connection has been made, make a subscription and send a message.
@@ -146,9 +144,6 @@
     client.subscribe("/statusmsg");
     client.subscribe("/trashstatus");
     client.subscribe("/checkcat");
-
-
-
     message = new Paho.MQTT.Message("off");
     message.destinationName = "/server";
     client.send(message);
@@ -195,7 +190,7 @@
       if (checkcat == 'cat in the box') {
         var el = document.getElementById("catCheck");
         console.log("catcheck is okay")
-        $("#catCheck").attr("src","picturesource/cat using.JPG");
+        $("#catCheck").attr("src", "picturesource/cat using.JPG");
         document.getElementById("checkfont").innerHTML = "The cat is using the iCatLitterBox now.";
         document.getElementById("checkfont").style.color = "#f44336";
       }
