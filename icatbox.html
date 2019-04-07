@@ -4,9 +4,7 @@
 <head>
     <title>iCatLitterService.</title>
     <meta charset="UTF-8">
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <link rel="stylesheet" href="stylework.css">
-    <link rel="contents" type="application/json" href="json.js" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -20,7 +18,30 @@
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase.js"></script>
     <script src="json.js"></script>
+    <script>
+        function projectPortal() {
+            var account = firebase.auth();
+            account.onAuthStateChanged(function (user) {
+                if (user) {
+                    swal("Authentication check...", "You have permission to see this information", "success").then(function () {
+
+                        window.location.href = "project.html"
+
+                    });
+                } else {
+                    swal("Authentication check...", "You aren't login please login to see this information", "error").then(function () {
+
+                        window.location.href = "icatbox.html"
+
+                    });
+                }
+            });
+        }
+    </script>
+
 </head>
 
 <body>
@@ -37,14 +58,161 @@
                     <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="project.html">Controller</a>
+                    <a class="nav-link" href="#" onclick="projectPortal()">Controller</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="contact.html">Contract Us</a>
                 </li>
             </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="BtnRegister"
+                        data-toggle="modal" data-target="#RegisterModal">
+                        Register
+                    </button>
+                </li>
+                &nbsp;&nbsp;&nbsp;
+                <li class="nav-item">
+                    <button class="btn btn-outline-danger my-2 my-sm-0" type="button" id="BtnLogin" data-toggle="modal"
+                        data-target="#LoginModal">
+                        Login
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <label class="tag tag-pill tag-default my-2 my-sm-0" id="LbLogout" style="display: none"></label>
+                    <button onclick="logout()" class="btn btn-outline-danger my-2 my-sm-0" type="button" id="BtnLogout"
+                        style="display: none">
+                        Logout
+                    </button>
+                </li>
+            </ul>
         </div>
     </nav>
+    <!-- Modal Register -->
+    <div class="modal fade" id="RegisterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Register</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="form_register" role="form">
+                        <h3>Register</h3>
+                        <hr class="colorgraph" />
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" name="first_name" id="first_name" class="form-control input-lg"
+                                        placeholder="First Name" tabindex="1" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" name="last_name" id="last_name" class="form-control input-lg"
+                                        placeholder="Last Name" tabindex="2" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="display_name" id="display_name" class="form-control input-lg"
+                                placeholder="Display Name" tabindex="3" required />
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" id="email" class="form-control input-lg"
+                                aria-describedby="emailHelp" placeholder="Email Address" tabindex="4" />
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                                else.</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="password" name="password" id="password" class="form-control input-lg"
+                                        aria-describedby="passwordHelpBlock" placeholder="Password" tabindex="5" />
+                                    <small id="passwordHelpBlock" class="form-text text-muted">
+                                        Your password must be 8 characters.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="password" name="password_confirmation" id="password_confirmation"
+                                        class="form-control input-lg" placeholder="Confirm Password" tabindex="6" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="colorgraph" />
+                        <p class="small mt-3">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By signing up, you are
+                            indicating that you have read and agree to the
+                            <a href="#" class="ps-hero__content__link">Terms of Use</a> and
+                            <a href="#">Privacy Policy</a>.
+                        </p>
+                    </form>
+                </div>
+
+                <div class="modal-footer" style="
+            padding-top: 0px;
+            margin-top: 0px;">
+                    <button onclick="saveData()" id="registerloading" class="btn btn-outline-success my-2 my-sm-0"
+                        type="button">
+                        Register
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Login -->
+    <div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Login</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="login_div" class="modal-body">
+                    <form role="form">
+                        <h3>Login</h3>
+                        <hr class="colorgraph" />
+                        <div class="form-group">
+                            <input type="email" name="email" id="email_login" class="form-control input-lg"
+                                placeholder="Email Address or Username" tabindex="4" />
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" id="password_login" class="form-control input-lg"
+                                placeholder="Password" tabindex="5" />
+                        </div>
+                        <hr class="colorgraph" />
+                        <p class="small mt-3">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By signing in, you are
+                            indicating that you have read and agree to the
+                            <a href="#" class="ps-hero__content__link">Terms of Use</a> and
+                            <a href="#">Privacy Policy</a>.
+                        </p>
+                    </form>
+                </div>
+
+                <div class="modal-footer" style="
+        
+              padding-top: 0px;
+        
+              margin-top: 0px;">
+                    <button onclick="signIn()" id="loginLoading" class="btn btn-outline-danger my-2 my-sm-0"
+                        type="button">
+                        Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- เริ่มส่วนของ เนื้อหา-->
     <br>
     <div class="container">

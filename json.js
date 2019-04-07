@@ -128,6 +128,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         document.getElementById("BtnRegister").style.display = "none";
         document.getElementById("BtnLogout").style.display = "inline-block"; //open
         document.getElementById("LbLogout").style.display = "inline-block"; //open
+        document.getElementById("hideNolog").style.display = "inline-block";
         var user = firebase.auth().currentUser;
         var email_id = user.email;
         document.getElementById("LbLogout").innerHTML = email_id;
@@ -137,6 +138,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         console.log('No User login');
         document.getElementById("BtnLogout").style.display = "none";
         document.getElementById("BtnLogin").style.display = "inline-block";
+        document.getElementById("hideNolog").style.display = "none";
     }
 });
 

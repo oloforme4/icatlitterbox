@@ -28,7 +28,7 @@
           <a class="nav-link" href="index.html">Home<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="project.html">Controller</a>
+          <a class="nav-link" href="#" onclick="projectPortal()" >Controller</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="contact.html">Contract Us</a>
@@ -182,7 +182,7 @@
   </div>
   <!--starting content-->
   <div class="container">
-    <h1 class="text-center">Why this? Answer is.. It is fast, cheap, and it answers to users and pet lover needs to
+    <h1 class="text-center">Why this? Answer is... It is fast, cheap, and it answers to users and pet lover needs to
       manage your pet life!
     </h1>
   </div>
@@ -191,7 +191,7 @@
     <ul>
       <li>
         <div class="image_title">
-          <a href="#">Why this?</a>
+          <a href="whyme.html">Why this?</a>
         </div>
         <a href="whyme.html">
           <img src="picturesource/home1_640x320.jpg" class="img-responsive" />
@@ -199,14 +199,14 @@
       </li>
       <li>
         <div class="image_title">
-          <a href="#">iCatLitterBox.</a>
+          <a href="icatbox.html">iCatLitterBox.</a>
         </div>
         <a href="icatbox.html">
           <img src="picturesource/home3_640x320.jpg" class="img-responsive" />
       </li>
       <li>
         <div class="image_title">
-          <a href="#">About me.</a>
+          <a href="aboutme.html">About me.</a>
         </div>
         <a href="aboutme.html">
           <img src="picturesource/home4_640x320.jpg" class="img-responsive" />
@@ -214,15 +214,15 @@
       </li>
       <li>
         <div class="image_title">
-          <a href="#">Controller</a>
+          <a id="projectLink" onclick="projectPortal()" href="#">Controller</a>
         </div>
-        <a href="project.html">
+        <a id="projectLink" onclick="projectPortal()" href="#">
           <img src="picturesource/home5_640x320.jpg" class="img-responsive" />
         </a>
       </li>
       <li>
         <div class="image_title">
-          <a href="#">Call for service.</a>
+          <a href="contact.html">Call for service.</a>
         </div>
         <a href="contact.html">
           <img src="picturesource/home2_640x320.jpg" class="img-responsive" />
@@ -233,6 +233,26 @@
   <!--second content-->
   <!--end content-->
   <!-- Optional JavaScript -->
+  <script>
+    function projectPortal() {
+      var account = firebase.auth();
+      account.onAuthStateChanged(function (user) {
+        if (user) {
+          swal("Authentication check...", "You have permission to see this information", "success").then(function () {
+
+            window.location.href = "project.html"
+
+          });
+        } else {
+          swal("Authentication check...", "You aren't login please login to see this information", "error").then(function () {
+
+            window.location.href = "index.html"
+
+          });
+        }
+      });
+    }
+  </script>
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

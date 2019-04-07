@@ -22,16 +22,179 @@
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js" type="text/javascript"></script>
   <!--test head-->
-
-  <script src="https://www.gstatic.com/firebasejs/5.8.3/firebase.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase-firestore.js"></script>
-  <script src="api.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase.js"></script>
   <script src="json.js"></script>
+  <script>
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        // User is signed in.
+        console.log('You can Reading');
+        //   reloadpage();
+        //LoadOnce();
+      } else {
+        // No user is signed in.
+        setTimeout(function () {
+          swal("Authentication check...", "You aren't login please login to see this information", "error").then(function () {
+            window.location.href = "index.html"
+          });
+        }, 1200);
+      }
+    });
+  </script>
+  <script>
+    function projectPortal() {
+      var account = firebase.auth();
+      account.onAuthStateChanged(function (user) {
+        if (user) {
+          swal("Authentication check...", "You have permission to see this information", "success").then(function () {
 
+            window.location.href = "project.html"
 
+          });
+        } else {
+          swal("Authentication check...", "You aren't login please login to see this information", "error").then(function () {
+
+            window.location.href = "project.html"
+
+          });
+        }
+      });
+    }
+  </script>
+  <script type="text/javascript">
+    client = new Paho.MQTT.Client("m15.cloudmqtt.com", 34203, "myweb");
+    //Example client = new Paho.MQTT.Client("m11.cloudmqtt.com", 32903, "web_" + parseInt(Math.random() * 100, 10));
+  
+    // set callback handlers
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+    var options = {
+      useSSL: true,
+      userName: "rrfbpaqw",
+      password: "jzW3F6vT2E4k",
+      onSuccess: onConnect,
+      onFailure: doFail
+    }
+    // connect the client
+    client.connect(options);
+    // called when the client connects
+    function onConnect() {
+      // Once a connection has been made, make a subscription and send a message.
+      console.log("onConnect");
+      client.subscribe("/server");
+      client.subscribe("/icatbox");
+      client.subscribe("/statusmsg");
+      client.subscribe("/trashstatus");
+      client.subscribe("/checkcat");
+      message = new Paho.MQTT.Message("off");
+      message.destinationName = "/server";
+      client.send(message);
+    }
+    function doFail(e) {
+      console.log(e);
+      alert("Error");
+    }
+    // called when the client loses its connection
+    function onConnectionLost(responseObject) {
+      if (responseObject.errorCode !== 0) {
+        console.log("onConnectionLost:" + responseObject.errorMessage);
+      }
+    }
+    // called when a message arrives
+    function onMessageArrived(message) {
+      console.log("onMessageArrived:" + message.destinationName + ' ' + message.payloadString);
+      // Online offline command
+      if (message.destinationName == "/statusmsg") {
+        var status = message.payloadString;
+        console.log(status);
+        if (status == 'Online') {
+          document.getElementById("statusCheck").innerHTML = "Online";
+          document.getElementById("statusCheck").style.color = "#8bc34a";
+  
+        } else if (status !== 'Online') {
+          document.getElementById("statusCheck").innerHTML = "Offline";
+          document.getElementById("statusCheck").style.color = "#f44336";
+        }
+  
+      }
+      else if (message.destinationName == "/trashstatus") {
+        var trashstatus = message.payloadString;
+        console.log(trashstatus);
+        $("#trashStatus").css("width", trashstatus + "%");
+        document.getElementById("valueBar").innerHTML = trashstatus + "%";
+        if (trashstatus > 60) {
+          notice_Line()
+        }
+      }
+      else if (message.destinationName == "/checkcat") {
+        var checkcat = message.payloadString;
+        if (checkcat == 'cat in the box') {
+          var el = document.getElementById("catCheck");
+          console.log("catcheck is okay")
+          $("#catCheck").attr("src", "picturesource/cat using.JPG");
+          document.getElementById("checkfont").innerHTML = "The cat is using the iCatLitterBox now.";
+          document.getElementById("checkfont").style.color = "#f44336";
+        }
+      }
+    }
+    function send(msg) {
+      message = new Paho.MQTT.Message(msg);
+      message.destinationName = "/server";
+      client.send(message);
+    }
+    function checktrash_on() {
+      send("check trash");
+    }
+    function notice_Line() {
+      send("alert line")
+    }
+    function cleanner_on() {
+      send("clean");
+    }
+  </script>
+  <!-- function check switch -->
+  <script>
+    function powerFunction() {
+      var checkBox = document.getElementById("powerCheck");
+      if (checkBox.checked == true) {
+        power_on();
+      } else {
+        power_off();
+      }
+    }
+  </script>
+  <script>
+    function sleepFunction() {
+      var checkBox = document.getElementById("sleepCheck");
+      if (checkBox.checked == true) {
+        sleep_on();
+      } else {
+        sleep_off();
+      }
+    }
+  </script>
+  <script>
+    function cleanFunction() {
+      var checkBox = document.getElementById("cleanCheck");
+      if (checkBox.checked == true) {
+        clean_on();
+      } else {
+        clean_off();
+      }
+    }
+  </script>
+  <script>
+    function noticeFunction() {
+      var checkBox = document.getElementById("noticeCheck");
+      if (checkBox.checked == true) {
+        notice_on();
+      } else {
+        notice_off();
+      }
+    }
+  </script>
+  
 </head>
-
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="index.html">iCatLitterService</a>
@@ -46,14 +209,158 @@
           <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="project.html">Controller</a>
+          <a class="nav-link" href="#" onclick="projectPortal()">Controller</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="contact.html">Contract Us</a>
         </li>
       </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="BtnRegister" data-toggle="modal"
+            data-target="#RegisterModal">
+            Register
+          </button>
+        </li>
+        &nbsp;&nbsp;&nbsp;
+        <li class="nav-item">
+          <button class="btn btn-outline-danger my-2 my-sm-0" type="button" id="BtnLogin" data-toggle="modal"
+            data-target="#LoginModal">
+            Login
+          </button>
+        </li>
+        <li class="nav-item">
+          <label class="tag tag-pill tag-default my-2 my-sm-0" id="LbLogout" style="display: none"></label>
+          <button onclick="logout()" class="btn btn-outline-danger my-2 my-sm-0" type="button" id="BtnLogout"
+            style="display: none">
+            Logout
+          </button>
+        </li>
+      </ul>
     </div>
   </nav>
+  <!-- Modal Register -->
+  <div class="modal fade" id="RegisterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Register</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="form_register" role="form">
+            <h3>Register</h3>
+            <hr class="colorgraph" />
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" name="first_name" id="first_name" class="form-control input-lg"
+                    placeholder="First Name" tabindex="1" required />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" name="last_name" id="last_name" class="form-control input-lg"
+                    placeholder="Last Name" tabindex="2" required />
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="text" name="display_name" id="display_name" class="form-control input-lg"
+                placeholder="Display Name" tabindex="3" required />
+            </div>
+            <div class="form-group">
+              <input type="email" name="email" id="email" class="form-control input-lg" aria-describedby="emailHelp"
+                placeholder="Email Address" tabindex="4" />
+              <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="password" name="password" id="password" class="form-control input-lg"
+                    aria-describedby="passwordHelpBlock" placeholder="Password" tabindex="5" />
+                  <small id="passwordHelpBlock" class="form-text text-muted">
+                    Your password must be 8 characters.
+                  </small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="password" name="password_confirmation" id="password_confirmation"
+                    class="form-control input-lg" placeholder="Confirm Password" tabindex="6" />
+                </div>
+              </div>
+            </div>
+
+            <hr class="colorgraph" />
+            <p class="small mt-3">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By signing up, you are
+              indicating that you have read and agree to the
+              <a href="#" class="ps-hero__content__link">Terms of Use</a> and
+              <a href="#">Privacy Policy</a>.
+            </p>
+          </form>
+        </div>
+
+        <div class="modal-footer" style="
+    padding-top: 0px;
+    margin-top: 0px;">
+          <button onclick="saveData()" id="registerloading" class="btn btn-outline-success my-2 my-sm-0" type="button">
+            Register
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal Login -->
+  <div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Login</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div id="login_div" class="modal-body">
+          <form role="form">
+            <h3>Login</h3>
+            <hr class="colorgraph" />
+            <div class="form-group">
+              <input type="email" name="email" id="email_login" class="form-control input-lg"
+                placeholder="Email Address or Username" tabindex="4" />
+            </div>
+            <div class="form-group">
+              <input type="password" name="password" id="password_login" class="form-control input-lg"
+                placeholder="Password" tabindex="5" />
+            </div>
+            <hr class="colorgraph" />
+            <p class="small mt-3">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By signing in, you are
+              indicating that you have read and agree to the
+              <a href="#" class="ps-hero__content__link">Terms of Use</a> and
+              <a href="#">Privacy Policy</a>.
+            </p>
+          </form>
+        </div>
+
+        <div class="modal-footer" style="
+
+      padding-top: 0px;
+
+      margin-top: 0px;">
+          <button onclick="signIn()" id="loginLoading" class="btn btn-outline-danger my-2 my-sm-0" type="button">
+            Login
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- เริ่มส่วนของ เนื้อหา-->
   <div class="container">
@@ -119,138 +426,4 @@
 <!--test firestore-->
 
 <!--Arduino-->
-<script type="text/javascript">
-  client = new Paho.MQTT.Client("m15.cloudmqtt.com", 34203, "myweb");
-  //Example client = new Paho.MQTT.Client("m11.cloudmqtt.com", 32903, "web_" + parseInt(Math.random() * 100, 10));
-
-  // set callback handlers
-  client.onConnectionLost = onConnectionLost;
-  client.onMessageArrived = onMessageArrived;
-  var options = {
-    useSSL: true,
-    userName: "rrfbpaqw",
-    password: "jzW3F6vT2E4k",
-    onSuccess: onConnect,
-    onFailure: doFail
-  }
-  // connect the client
-  client.connect(options);
-  // called when the client connects
-  function onConnect() {
-    // Once a connection has been made, make a subscription and send a message.
-    console.log("onConnect");
-    client.subscribe("/server");
-    client.subscribe("/icatbox");
-    client.subscribe("/statusmsg");
-    client.subscribe("/trashstatus");
-    client.subscribe("/checkcat");
-    message = new Paho.MQTT.Message("off");
-    message.destinationName = "/server";
-    client.send(message);
-    swal("Connected !", "1 device connected");
-  }
-  function doFail(e) {
-    console.log(e);
-    alert("Error");
-  }
-  // called when the client loses its connection
-  function onConnectionLost(responseObject) {
-    if (responseObject.errorCode !== 0) {
-      console.log("onConnectionLost:" + responseObject.errorMessage);
-    }
-  }
-  // called when a message arrives
-  function onMessageArrived(message) {
-    console.log("onMessageArrived:" + message.destinationName + ' ' + message.payloadString);
-    // Online offline command
-    if (message.destinationName == "/statusmsg") {
-      var status = message.payloadString;
-      console.log(status);
-      if (status == 'Online') {
-        document.getElementById("statusCheck").innerHTML = "Online";
-        document.getElementById("statusCheck").style.color = "#8bc34a";
-
-      } else if (status !== 'Online') {
-        document.getElementById("statusCheck").innerHTML = "Offline";
-        document.getElementById("statusCheck").style.color = "#f44336";
-      }
-
-    }
-    else if (message.destinationName == "/trashstatus") {
-      var trashstatus = message.payloadString;
-      console.log(trashstatus);
-      $("#trashStatus").css("width", trashstatus + "%");
-      document.getElementById("valueBar").innerHTML = trashstatus + "%";
-      if (trashstatus > 60) {
-        notice_Line()
-      }
-    }
-    else if (message.destinationName == "/checkcat") {
-      var checkcat = message.payloadString;
-      if (checkcat == 'cat in the box') {
-        var el = document.getElementById("catCheck");
-        console.log("catcheck is okay")
-        $("#catCheck").attr("src", "picturesource/cat using.JPG");
-        document.getElementById("checkfont").innerHTML = "The cat is using the iCatLitterBox now.";
-        document.getElementById("checkfont").style.color = "#f44336";
-      }
-    }
-  }
-  function send(msg) {
-    message = new Paho.MQTT.Message(msg);
-    message.destinationName = "/server";
-    client.send(message);
-  }
-  function checktrash_on() {
-    send("check trash");
-  }
-  function notice_Line() {
-    send("alert line")
-  }
-  function cleanner_on() {
-    send("clean");
-  }
-</script>
-<!-- function check switch -->
-<script>
-  function powerFunction() {
-    var checkBox = document.getElementById("powerCheck");
-    if (checkBox.checked == true) {
-      power_on();
-    } else {
-      power_off();
-    }
-  }
-</script>
-<script>
-  function sleepFunction() {
-    var checkBox = document.getElementById("sleepCheck");
-    if (checkBox.checked == true) {
-      sleep_on();
-    } else {
-      sleep_off();
-    }
-  }
-</script>
-<script>
-  function cleanFunction() {
-    var checkBox = document.getElementById("cleanCheck");
-    if (checkBox.checked == true) {
-      clean_on();
-    } else {
-      clean_off();
-    }
-  }
-</script>
-<script>
-  function noticeFunction() {
-    var checkBox = document.getElementById("noticeCheck");
-    if (checkBox.checked == true) {
-      notice_on();
-    } else {
-      notice_off();
-    }
-  }
-</script>
-
 </html>
