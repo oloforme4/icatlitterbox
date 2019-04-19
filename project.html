@@ -135,6 +135,13 @@
           document.getElementById("checkfont").innerHTML = "The cat is using the iCatLitterBox now.";
           document.getElementById("checkfont").style.color = "#f44336";
         }
+        else if (checkcat !== 'cat in the box') {
+          var el = document.getElementById("catCheck");
+          console.log("catcheck is okay")
+          $("#catCheck").attr("src", "picturesource/free cat box.jpg");
+          document.getElementById("checkfont").innerHTML = "The cat is not using the iCatLitterBox now.";
+          document.getElementById("checkfont").style.color = "#8bc34a";
+        }
       }
     }
     function send(msg) {
