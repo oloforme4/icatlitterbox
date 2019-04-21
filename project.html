@@ -64,7 +64,7 @@
   <script type="text/javascript">
     client = new Paho.MQTT.Client("m15.cloudmqtt.com", 34203, "myweb");
     //Example client = new Paho.MQTT.Client("m11.cloudmqtt.com", 32903, "web_" + parseInt(Math.random() * 100, 10));
-  
+
     // set callback handlers
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;
@@ -86,6 +86,7 @@
       client.subscribe("/statusmsg");
       client.subscribe("/trashstatus");
       client.subscribe("/checkcat");
+      client.subscribe("/icatwork");
       message = new Paho.MQTT.Message("off");
       message.destinationName = "/server";
       client.send(message);
@@ -110,12 +111,12 @@
         if (status == 'Online') {
           document.getElementById("statusCheck").innerHTML = "Online";
           document.getElementById("statusCheck").style.color = "#8bc34a";
-  
+
         } else if (status !== 'Online') {
           document.getElementById("statusCheck").innerHTML = "Offline";
           document.getElementById("statusCheck").style.color = "#f44336";
         }
-  
+
       }
       else if (message.destinationName == "/trashstatus") {
         var trashstatus = message.payloadString;
@@ -141,6 +142,12 @@
           $("#catCheck").attr("src", "picturesource/free cat box.jpg");
           document.getElementById("checkfont").innerHTML = "The cat is not using the iCatLitterBox now.";
           document.getElementById("checkfont").style.color = "#8bc34a";
+        }
+      }
+      else if (message.destinationName == "/icatwork") {
+        var icatwork = message.payloadString;
+        if (icatwork == 'icatworking') {
+          swal("iCatLitterBox", "iCatLitterBox Working :)", "success");
         }
       }
     }
@@ -200,8 +207,9 @@
       }
     }
   </script>
-  
+
 </head>
+
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="index.html">iCatLitterService</a>
@@ -433,4 +441,5 @@
 <!--test firestore-->
 
 <!--Arduino-->
+
 </html>
